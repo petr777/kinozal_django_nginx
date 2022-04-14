@@ -12,8 +12,8 @@ services:
       - media_volume:/home/app/media
     env_file:
       - .env
-    depends_on:
-      - db
+    networks:
+      - backend
 
   nginx:
     build:
@@ -27,21 +27,13 @@ services:
       - 80:80
     depends_on:
       - web
+    networks:
+      - backend
 
-
-  db:
-    image: postgres:13.0-alpine
-    container_name: postgres
-    volumes:
-      - postgres_volume:/var/lib/postgresql/data/
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    ports:
-      - 5432:5432
-    env_file:
-      - .env
-
+networks:
+  backend:
+    driver: bridge
 
 volumes:
-  postgres_volume:
   static_volume:
   media_volume:
